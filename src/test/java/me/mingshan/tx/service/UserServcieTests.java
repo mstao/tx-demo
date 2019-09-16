@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RunWith(SpringRunner.class)
@@ -27,19 +29,21 @@ public class UserServcieTests {
     }
 
     @Test
-    public void updateTest() {
+    public void updateTest() throws ExecutionException, InterruptedException {
         int count = 2;
         ExecutorService executor = Executors.newFixedThreadPool(count);
 
         AtomicInteger CR = new AtomicInteger(1);
 
         for (int i = 0; i < count; i++) {
-            executor.execute(() -> {
+            Future<Integer> future = executor.submit(() -> {
                 User user = new User();
                 user.setName("Walker");
                 user.setAge(CR.getAndIncrement());
-                userService.update(user);
+                return userService.update(user);
             });
+
+            System.out.println(future.get());
         }
 
         executor.shutdown();
