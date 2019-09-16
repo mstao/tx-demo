@@ -29,7 +29,7 @@ public class UserServcieTests {
     }
 
     @Test
-    public void updateTest() throws ExecutionException, InterruptedException {
+    public void updateTest() {
         int count = 2;
         ExecutorService executor = Executors.newFixedThreadPool(count);
 
@@ -43,7 +43,11 @@ public class UserServcieTests {
                 return userService.update(user);
             });
 
-            System.out.println(future.get());
+            try {
+                System.out.println(future.get());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         executor.shutdown();
