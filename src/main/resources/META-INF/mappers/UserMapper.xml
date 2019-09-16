@@ -19,12 +19,12 @@
   </insert>
 
   <select id="selectById" parameterType="java.lang.Long" resultMap="userResultMap">
-    SELECT name, age, gmt_create, gmt_modified
+    SELECT name, age, version, gmt_create, gmt_modified
     FROM s_user WHERE id = #{id}
   </select>
 
   <select id="selectByName" parameterType="java.lang.String" resultMap="userResultMap">
-    SELECT name, age, gmt_create, gmt_modified
+    SELECT name, age, version, gmt_create, gmt_modified
     FROM s_user WHERE name = #{name} FOR UPDATE
   </select>
 

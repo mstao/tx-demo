@@ -30,7 +30,7 @@ public class UserServcieTests {
 
     @Test
     public void updateTest() {
-        int count = 2;
+        int count = 10;
         ExecutorService executor = Executors.newFixedThreadPool(count);
 
         AtomicInteger CR = new AtomicInteger(1);
