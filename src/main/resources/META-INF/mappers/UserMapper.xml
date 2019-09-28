@@ -4,6 +4,7 @@
   <resultMap id="userResultMap" type="me.mingshan.tx.model.User">
     <result column="name" property="name"/>
     <result column="age" property="age"/>
+    <result column="state" property="state"/>
     <result column="version" property="version"/>
     <result column="gmt_create" property="gmtCreate"/>
     <result column="gmt_modified" property="gmtModified"/>
@@ -11,21 +12,30 @@
 
   <insert id="insert">
     INSERT INTO s_user (
-      name, age, version, gmt_create, gmt_modified
+      name, age, version, state, gmt_create, gmt_modified
     )
     VALUES (
-      #{name}, #{age}, 0, NOW(), NOW()
+      #{name}, #{age}, 0, #{state}, NOW(), NOW()
     )
   </insert>
 
   <select id="selectById" parameterType="java.lang.Long" resultMap="userResultMap">
-    SELECT name, age, version, gmt_create, gmt_modified
+    SELECT name, age, version, state, gmt_create, gmt_modified
     FROM s_user WHERE id = #{id}
   </select>
 
   <select id="selectByName" parameterType="java.lang.String" resultMap="userResultMap">
-    SELECT name, age, version, gmt_create, gmt_modified
+    SELECT name, age, version, state, gmt_create, gmt_modified
     FROM s_user WHERE name = #{name} FOR UPDATE
+  </select>
+
+
+  <select id="selectUsing" parameterType="java.lang.Boolean" resultMap="userResultMap">
+    SELECT name, age, version, state, gmt_create, gmt_modified
+    FROM s_user
+    <if test="lock == true">
+      FOR UPDATE
+    </if>
   </select>
 
   <update id="update" parameterType="me.mingshan.tx.model.User">
@@ -33,6 +43,9 @@
     <set>
       <if test="age != null and age != 0">
         age = #{age}
+      </if>
+      <if test="state != null and state != 0">
+        state = #{state}
       </if>
     </set>
 

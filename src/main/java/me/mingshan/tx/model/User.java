@@ -16,6 +16,7 @@ public class User implements Serializable {
     private String name;
     private int age;
     private long version;
+    private UserState state;
     private Date gmtCreate;
     private Date gmtModified;
 }

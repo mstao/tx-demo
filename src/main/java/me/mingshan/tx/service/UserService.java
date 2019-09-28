@@ -12,4 +12,6 @@ public interface UserService {
     User selectById(Long id);
 
     Integer update(User user);
+
+    User getInprogess();
 }

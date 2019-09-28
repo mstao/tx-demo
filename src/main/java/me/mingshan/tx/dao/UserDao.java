@@ -14,4 +14,6 @@ public interface UserDao {
     User selectByName(String name);
 
     Integer update(User note);
+
+    User getUsing(Boolean lock);
 }

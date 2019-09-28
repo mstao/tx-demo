@@ -3,9 +3,14 @@ package me.mingshan.tx.service;
 import lombok.extern.slf4j.Slf4j;
 import me.mingshan.tx.dao.UserDao;
 import me.mingshan.tx.model.User;
+import me.mingshan.tx.model.UserState;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -13,6 +18,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public Long insert(User user) {
@@ -45,5 +53,31 @@ public class UserServiceImpl implements UserService {
         }
 
         return 0;
+    }
+
+    @Override
+    @Transactional
+    public User getInprogess() {
+        User user = userDao.getUsing(false);
+        if (user != null) {
+            return user;
+        }
+        RLock lock = redissonClient.getLock("LOCK");
+        lock.lock();
+
+        try {
+            user = new User();
+            user.setName("zzz");
+            user.setAge(20);
+            user.setGmtCreate(new Date());
+            user.setGmtModified(new Date());
+            user.setState(UserState.USEING);
+            user.setVersion(0);
+            userDao.insert(user);
+        } finally {
+            lock.unlock();
+        }
+
+        return user;
     }
 }

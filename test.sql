@@ -1,6 +1,7 @@
 CREATE TABLE `s_user` (
   `name` varchar(30) NOT NULL,
   `age` int(11) NOT NULL DEFAULT '0',
+  `state` varchar(30) NOT NULL,
   `gmt_create` datetime NOT NULL,
   `gmt_modified` datetime NOT NULL,
   `version` bigint(20) NOT NULL,
